@@ -17,6 +17,11 @@ const deleteAccount = (accountIdToBeDeleted) => {
   );
 };
 
+const updateAccount = (currentAccount, newData) => {
+  const myUpdatedAccount = Object.assign(currentAccount, newData);
+  return myUpdatedAccount;
+};
+
 app.get("/accounts", (req, res) => {
   res.json(accounts);
   res.status(200).json(accounts);
@@ -33,6 +38,17 @@ app.delete("/accounts/:accountId", (req, res) => {
   if (account) {
     deleteAccount(accountId);
     res.status(204).end();
+  } else {
+    res.status(404).json();
+  }
+});
+
+app.put("/accounts/:accountId", (req, res) => {
+  const { accountId } = req.params;
+  const account = accounts.find((account) => account.id == accountId);
+  if (account) {
+    const updatedAccount = updateAccount(account, req.body);
+    res.status(200).json(updatedAccount);
   } else {
     res.status(404).json();
   }
