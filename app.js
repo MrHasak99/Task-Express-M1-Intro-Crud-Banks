@@ -11,14 +11,31 @@ const createNewAccount = (newAccountData) => {
   return newAccount;
 };
 
+const deleteAccount = (accountIdToBeDeleted) => {
+  const newAccounts = accounts.filter(
+    (account) => account.id != accountIdToBeDeleted
+  );
+};
+
 app.get("/accounts", (req, res) => {
   res.json(accounts);
   res.status(200).json(accounts);
 });
 
 app.post("/accounts", (req, res) => {
-  const newAccount = createNewAccount(req.body);    
+  const newAccount = createNewAccount(req.body);
   res.status(201).json(newAccount);
+});
+
+app.delete("/accounts/:accountId", (req, res) => {
+  const { accountId } = req.params;
+  const account = accounts.find((account) => account.id == accountId);
+  if (account) {
+    deleteAccount(accountId);
+    res.status(204).end();
+  } else {
+    res.status(404).json();
+  }
 });
 
 app.listen(8000, () => {
